@@ -1,0 +1,33 @@
+services:
+  arion:
+    image: ${ARION_IMAGE:-ghcr.io/arion-gateway/arion:1.0.0}
+    entrypoint: ["/arion"]
+    command:
+      - --config
+      - /demo/common/runtime.yaml
+      - --with-envoy-bootstrap
+      - /demo/common/bootstrap.yaml
+      - -C
+      - "1"
+      - -R
+      - "1"
+    ports:
+      - "127.0.0.1:${DEMO_HTTP_PORT:-18080}:18080"
+      - "127.0.0.1:${DEMO_TLS_PORT:-18443}:18443"
+    volumes:
+      - ./common:/demo/common:ro
+
+  arion-ctl:
+    image: ${ARION_CTL_IMAGE:-ghcr.io/arion-gateway/arion-ctl:1.0.0}
+    network_mode: service:arion
+    working_dir: /demo
+    environment:
+      ARION_CTL_PORT: "15051"
+      ARION_CTL_STATE_DIR: /tmp/arion-ctl-state
+      RELEASE_TMP: /tmp/arion-ctl-tmp
+      RELEASE_NODE: arion_demo
+      RELEASE_COOKIE: arion_demo_cookie
+      ERL_FLAGS: "+S 2:2"
+      ERL_MAX_PORTS: "65536"
+    volumes:
+      - .:/demo
