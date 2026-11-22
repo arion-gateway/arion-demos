@@ -12,7 +12,7 @@ Requirements: **Docker** (with Docker Compose).
 
 ```sh
 docker compose up -d
-docker compose exec -it arion-ctl arionctl shell
+docker compose exec -it arion-ctl /app/bin/arionctl shell
 ```
 
 Inside the shell, the `Demo` guide and all demo modules load automatically:
@@ -72,7 +72,7 @@ Any configuration built in the shell is stored by `arion-ctl` and can be exporte
 as standard resource definitions (JSON/YAML) for use elsewhere:
 
 ```sh
-docker compose exec arion-ctl arionctl get --fleet arion > config.json
+docker compose exec arion-ctl /app/bin/arionctl get --fleet arion > config.json
 ```
 
 Or from inside the shell: `Demo.export("config.json")`. You can apply the exported
